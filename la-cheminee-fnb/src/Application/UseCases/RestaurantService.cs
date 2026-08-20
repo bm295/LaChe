@@ -1,3 +1,4 @@
+using LaCheminee.FnB.Application.Authorization;
 using LaCheminee.FnB.Application.Models;
 using LaCheminee.FnB.Application.Ports;
 using LaCheminee.FnB.Domain.Entities;
@@ -12,7 +13,8 @@ public sealed class RestaurantService(
     IOrderRepository orderRepository,
     IInventoryRepository inventoryRepository,
     IKitchenNotifier kitchenNotifier,
-    IPaymentGateway paymentGateway)
+    IPaymentGateway paymentGateway,
+    RbacAuthorizer authorizer)
 {
     public Task Seed150SeatsLayoutAsync(CancellationToken cancellationToken = default) =>
         tableRepository.SeedLayout150SeatsAsync(cancellationToken);
@@ -73,6 +75,8 @@ public sealed class RestaurantService(
         decimal vatRate = 0.10m,
         CancellationToken cancellationToken = default)
     {
+        authorizer.Require(Permission.CloseAndPayOrder);
+
         var order = await orderRepository.GetAsync(orderId, cancellationToken);
         await DeductInventoryAsync(orderId, cancellationToken);
 
