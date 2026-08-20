@@ -16,6 +16,7 @@ This project has been refactored to follow **Hexagonal Architecture (Ports & Ada
 - Payment processing via an outbound port (`IPaymentGateway`) with simulated adapter.
 - Queued kitchen dispatch handled by a background worker behind `IKitchenNotifier`.
 - Basic occupancy reporting.
+- Role-based access control (RBAC): only staff with the `Cashier` or `Manager` role can close and pay an order.
 - Dependency Injection with `Microsoft.Extensions.DependencyInjection`.
 - Asynchronous application use cases and ports.
 
