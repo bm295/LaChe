@@ -2,6 +2,7 @@ import { Body, Controller, Get, Inject, Param, ParseFloatPipe, Post, Query } fro
 import { RestaurantService } from '../../application/restaurant.service.js';
 import { IngredientAvailability } from '../../domain/batch-size-calculator.js';
 import { BillSummary } from '../../domain/billing-calculator.js';
+import { MenuItemOrder, MostOrderedMenuItem, ReportingPeriod } from '../../domain/most-ordered-menu-item.js';
 
 @Controller()
 export class RestaurantController {
@@ -12,5 +13,12 @@ export class RestaurantController {
   @Post('recipes/maximum-portions')
   public calculateMaximumPortions(@Body('ingredients') ingredients: IngredientAvailability[]): { maximumPortions: number } {
     return { maximumPortions: this.restaurantService.calculateMaximumPortions(ingredients) };
+  }
+  @Post('reports/most-ordered-menu-item')
+  public findMostOrderedMenuItem(
+    @Body('orders') orders: MenuItemOrder[],
+    @Body('reportingPeriod') reportingPeriod: ReportingPeriod
+  ): MostOrderedMenuItem {
+    return this.restaurantService.findMostOrderedMenuItem(orders, reportingPeriod);
   }
 }

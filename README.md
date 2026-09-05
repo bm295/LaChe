@@ -38,6 +38,7 @@ The browser app calls the local API by default. Set `VITE_API_URL` when the API 
 | `GET` | `/menu/:id` | Get a menu item |
 | `GET` | `/bills/estimate?subtotal=1000000` | Estimate a bill including service charge and VAT |
 | `POST` | `/recipes/maximum-portions` | Calculate complete portions possible from inventory |
+| `POST` | `/reports/most-ordered-menu-item` | Find the most ordered menu item in a selected shift, day, or week |
 
 Example production-planning request:
 
@@ -51,6 +52,24 @@ Example production-planning request:
 ```
 
 The response is `{ "maximumPortions": 24 }`. The ingredient that can produce the fewest portions determines the result.
+
+Example most-ordered-item request. The API accepts real order lines and filters them to the inclusive-start, exclusive-end reporting period:
+
+```json
+{
+  "reportingPeriod": {
+    "startsAt": "2026-09-05T18:00:00+07:00",
+    "endsAt": "2026-09-05T22:00:00+07:00"
+  },
+  "orders": [
+    { "menuItemId": "house-coffee", "orderedAt": "2026-09-05T18:10:00+07:00", "quantity": 2 },
+    { "menuItemId": "iced-latte", "orderedAt": "2026-09-05T18:30:00+07:00", "quantity": 3 },
+    { "menuItemId": "iced-latte", "orderedAt": "2026-09-05T20:15:00+07:00", "quantity": 2 }
+  ]
+}
+```
+
+The response is `{ "menuItemId": "iced-latte", "orderedQuantity": 5 }`. The report supports unbounded string IDs and order-line quantities. For equal quantities, the lexical-smaller menu ID wins so the result is deterministic.
 
 ## Development commands
 
