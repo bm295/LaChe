@@ -1,5 +1,0 @@
-D:\github\MultiThread\ThreadStartDemo\ThreadStartDemo\bin\Debug\ThreadStartDemo.exe.config
-D:\github\MultiThread\ThreadStartDemo\ThreadStartDemo\bin\Debug\ThreadStartDemo.exe
-D:\github\MultiThread\ThreadStartDemo\ThreadStartDemo\bin\Debug\ThreadStartDemo.pdb
-D:\github\MultiThread\ThreadStartDemo\ThreadStartDemo\obj\Debug\ThreadStartDemo.exe
-D:\github\MultiThread\ThreadStartDemo\ThreadStartDemo\obj\Debug\ThreadStartDemo.pdb

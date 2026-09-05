@@ -1,6 +1,0 @@
-D:\github\MultiThread\NamingThreadDemo\NamingThreadDemo\bin\Debug\NamingThreadDemo.exe.config
-D:\github\MultiThread\NamingThreadDemo\NamingThreadDemo\bin\Debug\NamingThreadDemo.exe
-D:\github\MultiThread\NamingThreadDemo\NamingThreadDemo\bin\Debug\NamingThreadDemo.pdb
-D:\github\MultiThread\NamingThreadDemo\NamingThreadDemo\obj\Debug\NamingThreadDemo.csprojResolveAssemblyReference.cache
-D:\github\MultiThread\NamingThreadDemo\NamingThreadDemo\obj\Debug\NamingThreadDemo.exe
-D:\github\MultiThread\NamingThreadDemo\NamingThreadDemo\obj\Debug\NamingThreadDemo.pdb

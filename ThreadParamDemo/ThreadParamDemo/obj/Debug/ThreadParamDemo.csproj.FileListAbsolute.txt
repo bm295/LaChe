@@ -1,5 +1,0 @@
-D:\github\MultiThread\ThreadParamDemo\ThreadParamDemo\bin\Debug\ThreadParamDemo.exe.config
-D:\github\MultiThread\ThreadParamDemo\ThreadParamDemo\bin\Debug\ThreadParamDemo.exe
-D:\github\MultiThread\ThreadParamDemo\ThreadParamDemo\bin\Debug\ThreadParamDemo.pdb
-D:\github\MultiThread\ThreadParamDemo\ThreadParamDemo\obj\Debug\ThreadParamDemo.exe
-D:\github\MultiThread\ThreadParamDemo\ThreadParamDemo\obj\Debug\ThreadParamDemo.pdb

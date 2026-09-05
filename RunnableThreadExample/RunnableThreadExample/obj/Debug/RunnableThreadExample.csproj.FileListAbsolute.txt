@@ -1,6 +1,0 @@
-D:\github\MultiThread\RunnableThreadExample\RunnableThreadExample\bin\Debug\RunnableThreadExample.exe.config
-D:\github\MultiThread\RunnableThreadExample\RunnableThreadExample\bin\Debug\RunnableThreadExample.exe
-D:\github\MultiThread\RunnableThreadExample\RunnableThreadExample\bin\Debug\RunnableThreadExample.pdb
-D:\github\MultiThread\RunnableThreadExample\RunnableThreadExample\obj\Debug\RunnableThreadExample.csprojResolveAssemblyReference.cache
-D:\github\MultiThread\RunnableThreadExample\RunnableThreadExample\obj\Debug\RunnableThreadExample.exe
-D:\github\MultiThread\RunnableThreadExample\RunnableThreadExample\obj\Debug\RunnableThreadExample.pdb

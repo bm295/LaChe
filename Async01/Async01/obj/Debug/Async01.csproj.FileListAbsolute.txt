@@ -1,6 +1,0 @@
-D:\github\MultiThread\Async01\Async01\bin\Debug\Async01.exe.config
-D:\github\MultiThread\Async01\Async01\bin\Debug\Async01.exe
-D:\github\MultiThread\Async01\Async01\bin\Debug\Async01.pdb
-D:\github\MultiThread\Async01\Async01\obj\Debug\Async01.csprojResolveAssemblyReference.cache
-D:\github\MultiThread\Async01\Async01\obj\Debug\Async01.exe
-D:\github\MultiThread\Async01\Async01\obj\Debug\Async01.pdb

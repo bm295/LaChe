@@ -1,5 +1,0 @@
-D:\github\MultiThread\ThreadUsingSnippetCode\ThreadUsingSnippetCode\bin\Debug\ThreadUsingSnippetCode.exe.config
-D:\github\MultiThread\ThreadUsingSnippetCode\ThreadUsingSnippetCode\bin\Debug\ThreadUsingSnippetCode.exe
-D:\github\MultiThread\ThreadUsingSnippetCode\ThreadUsingSnippetCode\bin\Debug\ThreadUsingSnippetCode.pdb
-D:\github\MultiThread\ThreadUsingSnippetCode\ThreadUsingSnippetCode\obj\Debug\ThreadUsingSnippetCode.exe
-D:\github\MultiThread\ThreadUsingSnippetCode\ThreadUsingSnippetCode\obj\Debug\ThreadUsingSnippetCode.pdb

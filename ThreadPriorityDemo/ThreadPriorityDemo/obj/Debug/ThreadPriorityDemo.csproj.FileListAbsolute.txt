@@ -1,6 +1,0 @@
-D:\github\MultiThread\ThreadPriorityDemo\ThreadPriorityDemo\bin\Debug\ThreadPriorityDemo.exe.config
-D:\github\MultiThread\ThreadPriorityDemo\ThreadPriorityDemo\bin\Debug\ThreadPriorityDemo.exe
-D:\github\MultiThread\ThreadPriorityDemo\ThreadPriorityDemo\bin\Debug\ThreadPriorityDemo.pdb
-D:\github\MultiThread\ThreadPriorityDemo\ThreadPriorityDemo\obj\Debug\ThreadPriorityDemo.csprojResolveAssemblyReference.cache
-D:\github\MultiThread\ThreadPriorityDemo\ThreadPriorityDemo\obj\Debug\ThreadPriorityDemo.exe
-D:\github\MultiThread\ThreadPriorityDemo\ThreadPriorityDemo\obj\Debug\ThreadPriorityDemo.pdb

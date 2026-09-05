@@ -1,6 +1,0 @@
-D:\github\MultiThread\ThreadYieldDemo\ThreadYieldDemo\bin\Debug\ThreadYieldDemo.exe.config
-D:\github\MultiThread\ThreadYieldDemo\ThreadYieldDemo\bin\Debug\ThreadYieldDemo.exe
-D:\github\MultiThread\ThreadYieldDemo\ThreadYieldDemo\bin\Debug\ThreadYieldDemo.pdb
-D:\github\MultiThread\ThreadYieldDemo\ThreadYieldDemo\obj\Debug\ThreadYieldDemo.csprojResolveAssemblyReference.cache
-D:\github\MultiThread\ThreadYieldDemo\ThreadYieldDemo\obj\Debug\ThreadYieldDemo.exe
-D:\github\MultiThread\ThreadYieldDemo\ThreadYieldDemo\obj\Debug\ThreadYieldDemo.pdb

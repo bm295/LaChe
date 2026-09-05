@@ -1,6 +1,0 @@
-D:\github\MultiThread\ChildThread\ChildThread\bin\Debug\ChildThread.exe.config
-D:\github\MultiThread\ChildThread\ChildThread\bin\Debug\ChildThread.exe
-D:\github\MultiThread\ChildThread\ChildThread\bin\Debug\ChildThread.pdb
-D:\github\MultiThread\ChildThread\ChildThread\obj\Debug\ChildThread.csprojResolveAssemblyReference.cache
-D:\github\MultiThread\ChildThread\ChildThread\obj\Debug\ChildThread.exe
-D:\github\MultiThread\ChildThread\ChildThread\obj\Debug\ChildThread.pdb

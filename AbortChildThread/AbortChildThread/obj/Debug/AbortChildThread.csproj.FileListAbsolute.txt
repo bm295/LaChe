@@ -1,6 +1,0 @@
-D:\github\MultiThread\AbortChildThread\AbortChildThread\bin\Debug\AbortChildThread.exe.config
-D:\github\MultiThread\AbortChildThread\AbortChildThread\bin\Debug\AbortChildThread.exe
-D:\github\MultiThread\AbortChildThread\AbortChildThread\bin\Debug\AbortChildThread.pdb
-D:\github\MultiThread\AbortChildThread\AbortChildThread\obj\Debug\AbortChildThread.csprojResolveAssemblyReference.cache
-D:\github\MultiThread\AbortChildThread\AbortChildThread\obj\Debug\AbortChildThread.exe
-D:\github\MultiThread\AbortChildThread\AbortChildThread\obj\Debug\AbortChildThread.pdb

@@ -1,5 +1,0 @@
-D:\github\MultiThread\ThreadJoinDemo\ThreadJoinDemo\bin\Debug\ThreadJoinDemo.exe.config
-D:\github\MultiThread\ThreadJoinDemo\ThreadJoinDemo\bin\Debug\ThreadJoinDemo.exe
-D:\github\MultiThread\ThreadJoinDemo\ThreadJoinDemo\bin\Debug\ThreadJoinDemo.pdb
-D:\github\MultiThread\ThreadJoinDemo\ThreadJoinDemo\obj\Debug\ThreadJoinDemo.exe
-D:\github\MultiThread\ThreadJoinDemo\ThreadJoinDemo\obj\Debug\ThreadJoinDemo.pdb
