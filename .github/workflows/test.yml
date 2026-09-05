@@ -20,10 +20,24 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - run: npm --prefix web ci
+      - run: npm --prefix web run build
       - name: Run tests and print coverage
         run: npm run test:coverage
-      - uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage/cobertura-coverage.xml
-          if-no-files-found: error
+      - name: Publish coverage to job output
+        run: |
+          node <<'NODE'
+          const { readFileSync, appendFileSync } = require('node:fs');
+
+          const report = readFileSync('coverage/cobertura-coverage.xml', 'utf8');
+          const lineRate = Number(report.match(/line-rate="([^"]+)"/)?.[1] ?? 0);
+          const branchRate = Number(report.match(/branch-rate="([^"]+)"/)?.[1] ?? 0);
+          const lineCoverage = (lineRate * 100).toFixed(2);
+          const branchCoverage = (branchRate * 100).toFixed(2);
+
+          console.log(`::notice title=Code coverage::Line: ${lineCoverage}% | Branch: ${branchCoverage}%`);
+          appendFileSync(
+            process.env.GITHUB_STEP_SUMMARY,
+            `## Code coverage\n\n| Metric | Coverage |\n| --- | ---: |\n| Lines | ${lineCoverage}% |\n| Branches | ${branchCoverage}% |\n`,
+          );
+          NODE
