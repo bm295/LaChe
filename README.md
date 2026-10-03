@@ -82,6 +82,9 @@ npm --prefix web run build # Build the React interface
 
 GitHub Actions runs both builds and the tests for pushes and pull requests targeting `master`. Coverage is printed in the workflow output and job summary.
 
+For localhost browser automation of `features/valid-batch-sizes.feature`, see the
+[Playwright project setup and commands](e2e/README.md).
+
 ## Project structure
 
 ```text
@@ -92,5 +95,6 @@ src/
   infrastructure/  NestJS composition
 web/               React/Vite staff interface
 test/              Vitest domain tests
+e2e/               Standalone Playwright localhost UI tests
 features/          Gherkin business scenarios
 ```

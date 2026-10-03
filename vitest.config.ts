@@ -1,3 +1,3 @@
 import { defineConfig } from 'vitest/config';
 
-export default defineConfig({ test: { coverage: { provider: 'v8', reporter: ['text', 'cobertura'], reportsDirectory: 'coverage' } } });
+export default defineConfig({ test: { include: ['test/**/*.spec.ts'], coverage: { provider: 'v8', reporter: ['text', 'cobertura'], reportsDirectory: 'coverage' } } });

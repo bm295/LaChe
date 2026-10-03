@@ -5,6 +5,7 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -12,22 +13,37 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: npm --prefix web ci
-      - run: npm --prefix web run build
+      - name: Install backend dependencies
+        run: npm ci
+      - name: Build backend
+        run: npm run build
+      - name: Install frontend dependencies
+        run: npm --prefix web ci
+      - name: Build frontend
+        run: npm --prefix web run build
       - name: Run tests and print coverage
-        run: npm run test:coverage
+        run: npm run test:coverage -- --coverage.reportOnFailure
       - name: Publish coverage to job output
+        if: always()
         run: |
           node <<'NODE'
-          const { readFileSync, appendFileSync } = require('node:fs');
+          const { existsSync, readFileSync, appendFileSync } = require('node:fs');
+
+          if (!existsSync('coverage/cobertura-coverage.xml')) {
+            console.log('::warning title=Code coverage::Coverage report is unavailable. Check the build and test logs.');
+            appendFileSync(process.env.GITHUB_STEP_SUMMARY, '## Code coverage\n\nCoverage report is unavailable. Check the build and test logs.\n');
+            process.exit(0);
+          }
 
           const report = readFileSync('coverage/cobertura-coverage.xml', 'utf8');
           const lineRate = Number(report.match(/line-rate="([^"]+)"/)?.[1] ?? 0);
