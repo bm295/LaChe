@@ -7,7 +7,7 @@ import { findMostOrderedMenuItem, MenuItemOrder, MostOrderedMenuItem, ReportingP
 @Injectable()
 export class RestaurantService {
   public constructor(@Inject(InMemoryMenuRepository) private readonly menuRepository: InMemoryMenuRepository) {}
-  public calculateBill(subtotal: number): BillSummary { return calculateBill(subtotal, 0.1, 0.08); }
+  public calculateBill(subtotal: number, discountRate = 0, maximumDiscount = 0): BillSummary { return calculateBill(subtotal, 0.1, 0.08, discountRate, maximumDiscount); }
   public calculateMaximumPortions(ingredients: IngredientAvailability[]): number {
     return calculateMaximumPortions(ingredients);
   }

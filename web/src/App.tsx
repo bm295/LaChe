@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 
-type Bill = { subtotal: number; serviceCharge: number; vat: number; total: number };
+type Bill = { subtotal: number; discount: number; serviceCharge: number; vat: number; total: number };
 type Ingredient = { ingredientName: string; unitsRequiredPerPortion: number; packCount: number; unitsPerPack: number };
 
 const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
@@ -8,6 +8,8 @@ const money = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND
 
 export function App() {
   const [subtotal, setSubtotal] = useState('1000000');
+  const [discountPercent, setDiscountPercent] = useState('0');
+  const [maximumDiscount, setMaximumDiscount] = useState('0');
   const [bill, setBill] = useState<Bill | null>(null);
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { ingredientName: 'Ingredient A', unitsRequiredPerPortion: 2, packCount: 3, unitsPerPack: 24 },
@@ -19,9 +21,11 @@ export function App() {
   async function estimateBill(event: FormEvent) {
     event.preventDefault();
     setError('');
+    setBill(null);
     try {
-      const response = await fetch(`${apiUrl}/bills/estimate?subtotal=${encodeURIComponent(subtotal)}`);
-      if (!response.ok) throw new Error('Unable to calculate the bill.');
+      const query = new URLSearchParams({ subtotal, discountRate: String(Number(discountPercent) / 100), maximumDiscount });
+      const response = await fetch(`${apiUrl}/bills/estimate?${query}`);
+      if (!response.ok) throw new Error((await response.json()).message ?? 'Unable to calculate the bill.');
       setBill(await response.json());
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Something went wrong.'); }
   }
@@ -50,8 +54,11 @@ export function App() {
       <form className="card" onSubmit={estimateBill}>
         <p className="eyebrow">Front of house</p><h2>Bill estimator</h2>
         <label>Subtotal<input type="number" min="0" step="0.01" value={subtotal} onChange={(event) => setSubtotal(event.target.value)} required /></label>
+        <label>Discount (%)<input type="number" min="0" max="100" step="0.01" value={discountPercent} onChange={(event) => setDiscountPercent(event.target.value)} required /></label>
+        <label>Maximum discount (VND)<input type="number" min="0" step="0.01" value={maximumDiscount} onChange={(event) => setMaximumDiscount(event.target.value)} required /></label>
+        <p className="hint">Discount is capped at the maximum amount. Service charge and VAT apply after discount.</p>
         <button>Estimate bill</button>
-        {bill && <dl><div><dt>Subtotal</dt><dd>{money.format(bill.subtotal)}</dd></div><div><dt>Service charge</dt><dd>{money.format(bill.serviceCharge)}</dd></div><div><dt>VAT</dt><dd>{money.format(bill.vat)}</dd></div><div className="total"><dt>Total</dt><dd>{money.format(bill.total)}</dd></div></dl>}
+        {bill && <dl><div><dt>Subtotal</dt><dd>{money.format(bill.subtotal)}</dd></div><div><dt>Discount</dt><dd>{money.format(bill.discount)}</dd></div><div><dt>Service charge</dt><dd>{money.format(bill.serviceCharge)}</dd></div><div><dt>VAT</dt><dd>{money.format(bill.vat)}</dd></div><div className="total"><dt>Total</dt><dd>{money.format(bill.total)}</dd></div></dl>}
       </form>
       <form className="card" onSubmit={calculatePortions}>
         <p className="eyebrow">Kitchen</p><h2>Production planner</h2>
