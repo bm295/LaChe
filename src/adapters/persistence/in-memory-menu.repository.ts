@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MenuItem, MenuRepository } from '../../application/ports/menu.repository.js';
+import { MenuItem, MenuRepository } from '../../application/ports/menu.repository.ts';
 
 @Injectable()
 export class InMemoryMenuRepository implements MenuRepository {

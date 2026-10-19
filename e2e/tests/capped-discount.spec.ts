@@ -1,23 +1,34 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-// UI implementation of docs/features/capped-discount.md.
-test('Giảm giá có mức trần', async ({ page }) => {
-  await page.goto('/');
-  const estimator = page.locator('form').filter({ has: page.getByRole('heading', { name: 'Bill estimator' }) });
-  await test.step('Given subtotal 1000000 VND, discount 20% and cap 100000 VND', async () => {
-    await estimator.getByLabel('Subtotal', { exact: true }).fill('1000000');
-    await estimator.getByLabel('Discount (%)', { exact: true }).fill('20');
-    await estimator.getByLabel('Maximum discount (VND)', { exact: true }).fill('100000');
+test("Thu ngân tính giảm giá có mức trần và không hiển thị kết quả cũ sau chỉnh sửa", async ({
+  page,
+}) => {
+  await page.goto("/#billing");
+  await page.getByLabel("Tiền món trước giảm giá (VND)").fill("1000000");
+  await page.getByLabel("Giảm giá (%)").fill("20");
+  await page.getByLabel("Giảm tối đa (VND)").fill("100000");
+  await page.getByRole("button", { name: "Tính hóa đơn", exact: true }).click();
+  for (const [label, amount] of [
+    ["Giảm giá", -100000],
+    ["Phí phục vụ · 10%", 90000],
+    ["VAT · 8%", 79200],
+    ["Tổng thanh toán", 1069200],
+  ] as const) {
+    const row = page
+      .locator("dl > div")
+      .filter({ has: page.locator("dt").getByText(label, { exact: true }) });
+    const formatted = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+      maximumFractionDigits: 2,
+    }).format(amount);
+    await expect(row.locator("dd")).toHaveText(formatted);
+  }
+  await page.screenshot({
+    path: "test-results/billing-desktop.png",
+    fullPage: true,
   });
-  await test.step('When the cashier estimates the bill', async () => {
-    await estimator.getByRole('button', { name: 'Estimate bill' }).click();
-  });
-  await test.step('Then the discount is capped and charges apply after discount', async () => {
-    for (const [label, amount] of [['Discount', 100000], ['Service charge', 90000], ['VAT', 79200], ['Total', 1069200]] as const) {
-      const row = estimator.locator('dl > div').filter({ has: page.locator('dt').getByText(label, { exact: true }) });
-      const formatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(amount);
-      await expect(row.locator('dd')).toHaveText(formatted);
-    }
-    await expect(page.getByRole('alert')).toHaveCount(0);
-  });
+  await page.getByLabel("Tiền món trước giảm giá (VND)").fill("500000");
+  await expect(page.getByText("Hóa đơn sẽ xuất hiện tại đây")).toBeVisible();
+  await expect(page.getByRole("alert")).toHaveCount(0);
 });

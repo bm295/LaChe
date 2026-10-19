@@ -1,8 +1,9 @@
 import { BadRequestException, Body, Controller, Get, Inject, Param, ParseFloatPipe, Post, Query } from '@nestjs/common';
-import { RestaurantService } from '../../application/restaurant.service.js';
-import { IngredientAvailability } from '../../domain/batch-size-calculator.js';
-import { BillSummary } from '../../domain/billing-calculator.js';
-import { MenuItemOrder, MostOrderedMenuItem, ReportingPeriod } from '../../domain/most-ordered-menu-item.js';
+import { RestaurantService } from '../../application/restaurant.service.ts';
+import { IngredientAvailability } from '../../domain/batch-size-calculator.ts';
+import { BillSummary } from '../../domain/billing-calculator.ts';
+import { MenuItemOrder, MostOrderedMenuItem, ReportingPeriod } from '../../domain/most-ordered-menu-item.ts';
+import { AvailableTableGroup, InvalidTableLayoutError, TableConnection, TableSnapshot } from '../../domain/available-table-groups.ts';
 
 @Controller()
 export class RestaurantController {
@@ -34,5 +35,17 @@ export class RestaurantController {
     @Body('reportingPeriod') reportingPeriod: ReportingPeriod
   ): MostOrderedMenuItem {
     return this.restaurantService.findMostOrderedMenuItem(orders, reportingPeriod);
+  }
+  @Post('tables/available-groups')
+  public findAvailableTableGroups(
+    @Body('tables') tables: TableSnapshot[],
+    @Body('connections') connections: TableConnection[]
+  ): { groups: AvailableTableGroup[] } {
+    try {
+      return { groups: this.restaurantService.findAvailableTableGroups(tables, connections) };
+    } catch (error) {
+      if (error instanceof InvalidTableLayoutError) throw new BadRequestException(error.message);
+      throw error;
+    }
   }
 }

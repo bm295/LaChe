@@ -1,34 +1,40 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-// UI implementation of features/valid-batch-sizes.feature.
-test('Calculate portions from available stock packs', async ({ page }) => {
-  await page.goto('/');
-  const planner = page.locator('form').filter({
-    has: page.getByRole('heading', { name: 'Production planner' }),
-  });
-  const ingredients = planner.locator('fieldset');
-  await expect(ingredients).toHaveCount(2);
-
-  await test.step('Given recipe requirements and available ingredient packs', async () => {
-    const stock = [
-      { name: 'A', perPortion: '2', packs: '3', unitsPerPack: '24' },
-      { name: 'B', perPortion: '3', packs: '2', unitsPerPack: '36' },
-    ];
-    for (const [index, ingredient] of stock.entries()) {
-      const row = ingredients.nth(index);
-      await row.getByRole('textbox', { name: 'Ingredient name' }).fill(ingredient.name);
-      await row.getByRole('spinbutton', { name: 'Units per portion', exact: true }).fill(ingredient.perPortion);
-      await row.getByRole('spinbutton', { name: 'Pack count', exact: true }).fill(ingredient.packs);
-      await row.getByRole('spinbutton', { name: 'Units per pack', exact: true }).fill(ingredient.unitsPerPack);
-    }
-  });
-
-  await test.step('When I calculate the maximum producible portions', async () => {
-    await planner.getByRole('button', { name: 'Calculate portions', exact: true }).click();
-  });
-
-  await test.step('Then the kitchen can prepare 24 complete portions', async () => {
-    await expect(planner.locator('.result')).toHaveText('24 complete portions can be prepared.');
-    await expect(page.getByRole('alert')).toHaveCount(0);
-  });
+test("Bếp tính số phần ăn, xử lý hết hàng và thêm/xóa nguyên liệu", async ({
+  page,
+}) => {
+  await page.goto("/#kitchen");
+  const rows = page.locator(".ingredient-row");
+  await expect(rows).toHaveCount(2);
+  for (const [index, stock] of [
+    { name: "Cà phê", perPortion: "2", packs: "3", perPack: "24" },
+    { name: "Sữa", perPortion: "3", packs: "2", perPack: "36" },
+  ].entries()) {
+    await rows.nth(index).getByLabel("Tên nguyên liệu").fill(stock.name);
+    await rows
+      .nth(index)
+      .getByLabel("Đơn vị mỗi phần", { exact: true })
+      .fill(stock.perPortion);
+    await rows
+      .nth(index)
+      .getByLabel("Số gói", { exact: true })
+      .fill(stock.packs);
+    await rows
+      .nth(index)
+      .getByLabel("Đơn vị mỗi gói", { exact: true })
+      .fill(stock.perPack);
+  }
+  await page.getByRole("button", { name: "Tính số phần ăn" }).click();
+  await expect(page.locator(".capacity-result .result-number")).toHaveText(
+    "24",
+  );
+  await rows.nth(0).getByLabel("Số gói", { exact: true }).fill("0");
+  await expect(page.locator(".capacity-result")).toHaveCount(0);
+  await page.getByRole("button", { name: "Tính số phần ăn" }).click();
+  await expect(page.locator(".capacity-result .result-number")).toHaveText("0");
+  await page.getByRole("button", { name: "Thêm nguyên liệu" }).click();
+  await expect(rows).toHaveCount(3);
+  await page.getByRole("button", { name: "Xóa nguyên liệu 3" }).click();
+  await expect(rows).toHaveCount(2);
+  await expect(page.getByRole("alert")).toHaveCount(0);
 });

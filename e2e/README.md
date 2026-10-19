@@ -1,10 +1,11 @@
 # Localhost UI automation
 
-Standalone Playwright project covering the scenario in
-[`valid-batch-sizes.feature`](../features/valid-batch-sizes.feature).
-The test fills the Production planner through the browser, calls the real backend,
-and checks that the UI displays 24 complete portions. It does not mock the API.
-The feature is mapped to a Playwright test; this project does not execute Gherkin directly.
+Standalone Playwright tests for the Vietnamese restaurant workspace: capped
+discounts, production planning, available table groups, menu lookup, reporting,
+navigation, local drafts, and mobile layouts. Business workflows call the real
+backend; only the connection-failure test intercepts requests to simulate an
+outage and retry. Feature scenarios are mapped to Playwright tests; this project
+does not execute Gherkin directly.
 
 From the repository root (Node.js 22 or newer):
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findMostOrderedMenuItem } from '../src/domain/most-ordered-menu-item.js';
+import { findMostOrderedMenuItem } from '../src/domain/most-ordered-menu-item.ts';
 
 describe('findMostOrderedMenuItem', () => {
   it('finds the most ordered drink during an evening shift', () => {

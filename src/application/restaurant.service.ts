@@ -1,8 +1,9 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { InMemoryMenuRepository } from '../adapters/persistence/in-memory-menu.repository.js';
-import { BillSummary, calculateBill } from '../domain/billing-calculator.js';
-import { IngredientAvailability, calculateMaximumPortions } from '../domain/batch-size-calculator.js';
-import { findMostOrderedMenuItem, MenuItemOrder, MostOrderedMenuItem, ReportingPeriod } from '../domain/most-ordered-menu-item.js';
+import { InMemoryMenuRepository } from '../adapters/persistence/in-memory-menu.repository.ts';
+import { BillSummary, calculateBill } from '../domain/billing-calculator.ts';
+import { IngredientAvailability, calculateMaximumPortions } from '../domain/batch-size-calculator.ts';
+import { findMostOrderedMenuItem, MenuItemOrder, MostOrderedMenuItem, ReportingPeriod } from '../domain/most-ordered-menu-item.ts';
+import { AvailableTableGroup, findAvailableTableGroups, TableConnection, TableSnapshot } from '../domain/available-table-groups.ts';
 
 @Injectable()
 export class RestaurantService {
@@ -13,6 +14,9 @@ export class RestaurantService {
   }
   public findMostOrderedMenuItem(orders: MenuItemOrder[], reportingPeriod: ReportingPeriod): MostOrderedMenuItem {
     return findMostOrderedMenuItem(orders, reportingPeriod);
+  }
+  public findAvailableTableGroups(tables: readonly TableSnapshot[], connections: readonly TableConnection[]): AvailableTableGroup[] {
+    return findAvailableTableGroups(tables, connections);
   }
   public async getMenuItem(id: string) {
     const item = await this.menuRepository.findById(id);

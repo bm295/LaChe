@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateMaximumPortions } from '../src/domain/batch-size-calculator.js';
+import { calculateMaximumPortions } from '../src/domain/batch-size-calculator.ts';
 
 describe('calculateMaximumPortions', () => {
   it('calculates portions from recipe requirements, pack sizes, and pack counts', () => {

@@ -1,79 +1,189 @@
-import { FormEvent, useState } from 'react';
+import { useEffect, useState } from "react";
+import { Icon, type IconName } from "./components/ui";
+import { request } from "./lib/api";
+import { Overview } from "./pages/Overview";
+import { Billing } from "./pages/Billing";
+import { Kitchen } from "./pages/Kitchen";
+import { Tables } from "./pages/Tables";
+import { Reports } from "./pages/Reports";
+import { Menu } from "./pages/Menu";
 
-type Bill = { subtotal: number; discount: number; serviceCharge: number; vat: number; total: number };
-type Ingredient = { ingredientName: string; unitsRequiredPerPortion: number; packCount: number; unitsPerPack: number };
-
-const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
-const money = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 });
-
+const navigation: {
+  id: string;
+  label: string;
+  icon: IconName;
+  section: string;
+}[] = [
+  {
+    id: "overview",
+    label: "Tổng quan",
+    icon: "overview",
+    section: "Không gian làm việc",
+  },
+  { id: "tables", label: "Bàn & chỗ ngồi", icon: "tables", section: "Phục vụ" },
+  { id: "billing", label: "Tính hóa đơn", icon: "bill", section: "Phục vụ" },
+  { id: "menu", label: "Tra cứu món", icon: "menu", section: "Phục vụ" },
+  {
+    id: "kitchen",
+    label: "Kế hoạch bếp",
+    icon: "kitchen",
+    section: "Vận hành",
+  },
+  {
+    id: "reports",
+    label: "Món bán chạy",
+    icon: "reports",
+    section: "Vận hành",
+  },
+];
 export function App() {
-  const [subtotal, setSubtotal] = useState('1000000');
-  const [discountPercent, setDiscountPercent] = useState('0');
-  const [maximumDiscount, setMaximumDiscount] = useState('0');
-  const [bill, setBill] = useState<Bill | null>(null);
-  const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { ingredientName: 'Ingredient A', unitsRequiredPerPortion: 2, packCount: 3, unitsPerPack: 24 },
-    { ingredientName: 'Ingredient B', unitsRequiredPerPortion: 3, packCount: 2, unitsPerPack: 36 }
-  ]);
-  const [maximumPortions, setMaximumPortions] = useState<number | null>(null);
-  const [error, setError] = useState('');
-
-  async function estimateBill(event: FormEvent) {
-    event.preventDefault();
-    setError('');
-    setBill(null);
-    try {
-      const query = new URLSearchParams({ subtotal, discountRate: String(Number(discountPercent) / 100), maximumDiscount });
-      const response = await fetch(`${apiUrl}/bills/estimate?${query}`);
-      if (!response.ok) throw new Error((await response.json()).message ?? 'Unable to calculate the bill.');
-      setBill(await response.json());
-    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Something went wrong.'); }
-  }
-
-  async function calculatePortions(event: FormEvent) {
-    event.preventDefault();
-    setError('');
-    try {
-      const response = await fetch(`${apiUrl}/recipes/maximum-portions`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ingredients })
-      });
-      if (!response.ok) throw new Error((await response.json()).message ?? 'Unable to calculate portions.');
-      setMaximumPortions((await response.json()).maximumPortions);
-    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Something went wrong.'); }
-  }
-
-  function updateIngredient(index: number, field: keyof Ingredient, value: string) {
-    setIngredients(ingredients.map((ingredient, currentIndex) => currentIndex === index
-      ? { ...ingredient, [field]: field === 'ingredientName' ? value : Number(value) } : ingredient));
-  }
-
-  return <main>
-    <header><p className="eyebrow">La Cheminée</p><h1>Kitchen operations</h1><p>Plan production and estimate bills with live restaurant rules.</p></header>
-    {error && <p className="error" role="alert">{error}</p>}
-    <section className="grid">
-      <form className="card" onSubmit={estimateBill}>
-        <p className="eyebrow">Front of house</p><h2>Bill estimator</h2>
-        <label>Subtotal<input type="number" min="0" step="0.01" value={subtotal} onChange={(event) => setSubtotal(event.target.value)} required /></label>
-        <label>Discount (%)<input type="number" min="0" max="100" step="0.01" value={discountPercent} onChange={(event) => setDiscountPercent(event.target.value)} required /></label>
-        <label>Maximum discount (VND)<input type="number" min="0" step="0.01" value={maximumDiscount} onChange={(event) => setMaximumDiscount(event.target.value)} required /></label>
-        <p className="hint">Discount is capped at the maximum amount. Service charge and VAT apply after discount.</p>
-        <button>Estimate bill</button>
-        {bill && <dl><div><dt>Subtotal</dt><dd>{money.format(bill.subtotal)}</dd></div><div><dt>Discount</dt><dd>{money.format(bill.discount)}</dd></div><div><dt>Service charge</dt><dd>{money.format(bill.serviceCharge)}</dd></div><div><dt>VAT</dt><dd>{money.format(bill.vat)}</dd></div><div className="total"><dt>Total</dt><dd>{money.format(bill.total)}</dd></div></dl>}
-      </form>
-      <form className="card" onSubmit={calculatePortions}>
-        <p className="eyebrow">Kitchen</p><h2>Production planner</h2>
-        <p className="hint">Enter recipe usage and available ingredient packs.</p>
-        {ingredients.map((ingredient, index) => <fieldset key={index}>
-          <input aria-label="Ingredient name" value={ingredient.ingredientName} onChange={(event) => updateIngredient(index, 'ingredientName', event.target.value)} required />
-          <label>Per portion<input aria-label="Units per portion" type="number" min="1" value={ingredient.unitsRequiredPerPortion} onChange={(event) => updateIngredient(index, 'unitsRequiredPerPortion', event.target.value)} required /></label>
-          <label>Packs<input aria-label="Pack count" type="number" min="0" value={ingredient.packCount} onChange={(event) => updateIngredient(index, 'packCount', event.target.value)} required /></label>
-          <label>Units / pack<input aria-label="Units per pack" type="number" min="1" value={ingredient.unitsPerPack} onChange={(event) => updateIngredient(index, 'unitsPerPack', event.target.value)} required /></label>
-          {ingredients.length > 1 && <button className="link" type="button" onClick={() => setIngredients(ingredients.filter((_, currentIndex) => currentIndex !== index))}>Remove</button>}
-        </fieldset>)}
-        <button className="secondary" type="button" onClick={() => setIngredients([...ingredients, { ingredientName: '', unitsRequiredPerPortion: 1, packCount: 0, unitsPerPack: 1 }])}>+ Add ingredient</button>
-        <button>Calculate portions</button>
-        {maximumPortions !== null && <p className="result"><strong>{maximumPortions}</strong> complete portions can be prepared.</p>}
-      </form>
-    </section>
-  </main>;
+  const [active, setActive] = useState(() =>
+    navigation.some((item) => item.id === location.hash.slice(1))
+      ? location.hash.slice(1)
+      : "overview",
+  );
+  const [health, setHealth] = useState<"checking" | "online" | "offline">(
+    "checking",
+  );
+  useEffect(() => {
+    let mounted = true;
+    const check = () =>
+      request<{ status: string }>("/health")
+        .then((data) => {
+          if (mounted) setHealth(data.status === "ok" ? "online" : "offline");
+        })
+        .catch(() => {
+          if (mounted) setHealth("offline");
+        });
+    void check();
+    const timer = setInterval(check, 30000);
+    const onHash = () =>
+      setActive(
+        navigation.some((item) => item.id === location.hash.slice(1))
+          ? location.hash.slice(1)
+          : "overview",
+      );
+    window.addEventListener("hashchange", onHash);
+    return () => {
+      mounted = false;
+      clearInterval(timer);
+      window.removeEventListener("hashchange", onHash);
+    };
+  }, []);
+  const navigate = (id: string) => {
+    setActive(id);
+    location.hash = id;
+    window.scrollTo({ top: 0 });
+  };
+  const selected = navigation.find((item) => item.id === active)!;
+  return (
+    <div className="app-shell">
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById("main-content")?.focus();
+        }}
+      >
+        Đến nội dung chính
+      </a>
+      <aside className="sidebar">
+        <a
+          className="brand"
+          href="#overview"
+          onClick={() => navigate("overview")}
+        >
+          <span className="brand-mark">
+            lc<span>✦</span>
+          </span>
+          <span>
+            La Cheminée<small>RESTAURANT WORKSPACE</small>
+          </span>
+        </a>
+        <div className="workspace-label">
+          <span className="workspace-monogram">LC</span>
+          <div>
+            Không gian nhà hàng<small>Vận hành mỗi ngày</small>
+          </div>
+        </div>
+        <nav aria-label="Điều hướng chính">
+          {navigation.map((item, index) => (
+            <div key={item.id}>
+              {(index === 0 ||
+                item.section !== navigation[index - 1].section) && (
+                <p className="nav-label">{item.section}</p>
+              )}
+              <a
+                href={`#${item.id}`}
+                className={`nav-item ${active === item.id ? "active" : ""}`}
+                aria-current={active === item.id ? "page" : undefined}
+                onClick={() => navigate(item.id)}
+              >
+                <Icon name={item.icon} />
+                {item.label}
+                {active === item.id && <span className="nav-dot" />}
+              </a>
+            </div>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          <span className="small-star">✦</span>
+          <p>
+            Chăm chút từng chi tiết.
+            <br />
+            <strong>Trọn vẹn mỗi bữa ăn.</strong>
+          </p>
+          <div className="team-profile">
+            <span className="avatar">LC</span>
+            <div>
+              Đội ngũ nhà hàng<small>Không gian vận hành</small>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div className="main-shell">
+        <header className="topbar">
+          <div className="breadcrumb">
+            La Cheminée <span>/</span> <strong>{selected.label}</strong>
+          </div>
+          <div className={`connection ${health}`}>
+            <span />
+            {health === "online"
+              ? "Dịch vụ sẵn sàng"
+              : health === "offline"
+                ? "Chưa kết nối dịch vụ"
+                : "Đang kết nối…"}
+          </div>
+        </header>
+        <main id="main-content" tabIndex={-1}>
+          <section hidden={active !== "overview"} aria-label="Tổng quan">
+            <Overview navigate={navigate} />
+          </section>
+          <section hidden={active !== "tables"} aria-label="Bàn và chỗ ngồi">
+            <Tables />
+          </section>
+          <section hidden={active !== "billing"} aria-label="Tính hóa đơn">
+            <Billing />
+          </section>
+          <section hidden={active !== "kitchen"} aria-label="Kế hoạch bếp">
+            <Kitchen />
+          </section>
+          <section hidden={active !== "reports"} aria-label="Món bán chạy">
+            <Reports />
+          </section>
+          <section hidden={active !== "menu"} aria-label="Tra cứu món">
+            <Menu />
+          </section>
+        </main>
+        <footer className="app-footer">
+          <span>
+            La Cheminée <span className="footer-star">✦</span> Không gian dành
+            cho những bữa ăn ngon.
+          </span>
+          <span>Restaurant workspace</span>
+        </footer>
+      </div>
+    </div>
+  );
 }

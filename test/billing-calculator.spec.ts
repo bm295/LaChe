@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateBill } from '../src/domain/billing-calculator.js';
+import { calculateBill } from '../src/domain/billing-calculator.ts';
 
 describe('calculateBill', () => {
   it('includes service charge and VAT', () => expect(calculateBill(100, 0.1, 0.08)).toEqual({ subtotal: 100, discount: 0, serviceCharge: 10, vat: 8.8, total: 118.8 }));
